@@ -27,6 +27,7 @@ namespace Game.Level
         private PickupItem _activeExtinguisher;
         private float _respawnTimer;
         private bool _isRespawning;
+        private bool _isExtinguisherHeld;
 
         private void Start()
         {
@@ -66,7 +67,7 @@ namespace Game.Level
                 return;
             }
 
-            if (_activeExtinguisher == null || _isRespawning)
+            if (_activeExtinguisher == null || _isRespawning || _isExtinguisherHeld)
             {
                 return;
             }
@@ -74,7 +75,11 @@ namespace Game.Level
             PickupItem extinguisher = _activeExtinguisher;
             extinguisher.transform.SetParent(null, true);
 
-            if (!interactor.ItemHolder.PickItem(extinguisher))
+            if (interactor.ItemHolder.PickItem(extinguisher))
+            {
+                _isExtinguisherHeld = true;
+            }
+            else
             {
                 ReturnExtinguisherToSpawn(extinguisher);
             }
@@ -88,6 +93,7 @@ namespace Game.Level
             }
 
             _activeExtinguisher = null;
+            _isExtinguisherHeld = false;
             BeginRespawn();
         }
 
@@ -114,6 +120,7 @@ namespace Game.Level
             }
 
             tracker.Setup(this, _activeExtinguisher);
+            _isExtinguisherHeld = false;
         }
 
         private void BeginRespawn()
@@ -146,6 +153,7 @@ namespace Game.Level
             extinguisher.transform.localPosition = Vector3.zero;
             extinguisher.transform.localRotation = Quaternion.identity;
             SetExtinguisherPhysics(extinguisher, false);
+            _isExtinguisherHeld = false;
         }
 
         private static void SetExtinguisherPhysics(PickupItem extinguisher, bool isEnabled)
@@ -157,7 +165,7 @@ namespace Game.Level
 
             rigidbody.isKinematic = !isEnabled;
             rigidbody.useGravity = isEnabled;
-            rigidbody.detectCollisions = isEnabled;
+            rigidbody.detectCollisions = true;
         }
     }
 }

@@ -106,8 +106,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6955699566077595354}
   - {fileID: 4387463982949990269}
@@ -205,7 +205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Items.ResourceBox
   _resourceType: 2
   _itemPrefabDatabase: {fileID: 11400000, guid: 606576d51868d3840a704ad4d445dee1, type: 2}
-  _holdDuration: 0.25
+  _holdDuration: 0
   _holdProgressSlider: {fileID: 5138080880020673978}
 --- !u!54 &6482948281391991203
 Rigidbody:
@@ -554,7 +554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4478677164199236, guid: 96ec3966e2e9e004086cf5209750e0b2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.246
       objectReference: {fileID: 0}
     - target: {fileID: 4478677164199236, guid: 96ec3966e2e9e004086cf5209750e0b2, type: 3}
       propertyPath: m_LocalPosition.z

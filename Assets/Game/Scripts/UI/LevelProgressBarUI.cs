@@ -18,11 +18,7 @@ namespace Game.UI
 
         private void OnEnable()
         {
-            if (_progressController == null)
-            {
-                Debug.LogWarning($"{nameof(LevelProgressBarUI)} on {name} is missing a progress controller.", this);
-                return;
-            }
+            if (_progressController == null) _progressController = FindObjectOfType<LevelProgressController>();
 
             _progressController.ProgressChanged += OnProgressChanged;
             UpdateView(_progressController.NormalizedProgress);

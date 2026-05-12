@@ -1,4 +1,5 @@
 using Game.Code.Core;
+using Game.Items;
 using UnityEngine;
 
 namespace Game.Gameplay.Controllers
@@ -28,6 +29,8 @@ namespace Game.Gameplay.Controllers
 
         // Components
         private CharacterController _characterController;
+        private Animator _animator;
+        private PlayerItemHolder _itemHolder;
 
         // Movement
         private float _verticalVelocity;
@@ -41,6 +44,8 @@ namespace Game.Gameplay.Controllers
         public void Construct()
         {
             _characterController = GetComponent<CharacterController>();
+            _animator = GetComponentInChildren<Animator>();
+            _itemHolder = GetComponent<PlayerItemHolder>();
 
             if (_cameraTransform == null && Camera.main != null)
             {
@@ -55,11 +60,27 @@ namespace Game.Gameplay.Controllers
             if (_isDashing)
             {
                 UpdateDash();
+
                 return;
             }
 
             UpdateGravity();
+
             UpdateMove();
+
+            float targetMoveValue = IsMoveActive
+                ? Mathf.Abs(MoveDirection.x) + Mathf.Abs(MoveDirection.z)
+                : 0f
+            ;
+
+            _animator.SetFloat(
+                "MoveX_f",
+                targetMoveValue,
+                0.15f,
+                Time.deltaTime)
+            ;
+
+            _animator.SetBool("CarryingActive_b", _itemHolder.HasItem);
         }
 
         public void Dash()

@@ -1,3 +1,5 @@
+using Game.Audio;
+using Game.Core;
 using UnityEngine;
 
 namespace Game.Items
@@ -18,6 +20,7 @@ namespace Game.Items
         {
             if (other.collider.CompareTag("Player")) return;
 
+            AudioService.Instance?.PlaySfx(GameSoundId.ItemDestroyed);
             Destroy(gameObject);
         }
     }

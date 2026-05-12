@@ -1,3 +1,5 @@
+using Game.Audio;
+using Game.Core;
 using UnityEngine;
 
 namespace Game.Items
@@ -15,6 +17,7 @@ namespace Game.Items
         private float _throwForce = 5f;
 
         public bool HasItem => _currentItem != null;
+        public PickupItem CurrentItem => _currentItem;
         public ItemType CurrentItemType => _currentItem != null ? _currentItem.ItemType : ItemType.None;
 
         public bool PickItem(PickupItem item)
@@ -33,6 +36,7 @@ namespace Game.Items
             _currentItem = item;
 
             AttachToHoldPoint(_currentItem);
+            AudioService.Instance?.PlaySfx(GameSoundId.ItemPickedUp);
 
             return true;
         }
@@ -56,6 +60,7 @@ namespace Game.Items
             _currentItem.transform.SetParent(null, true);
 
             _currentItem = null;
+            AudioService.Instance?.PlaySfx(GameSoundId.ItemThrown);
         }
 
         public bool SpawnItem(ItemType type, ItemPrefabDatabase database)
@@ -119,6 +124,7 @@ namespace Game.Items
 
             PickupItem item = _currentItem;
             _currentItem = null;
+            AudioService.Instance?.PlaySfx(GameSoundId.ItemDestroyed);
             Destroy(item.gameObject);
         }
 

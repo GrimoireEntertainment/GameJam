@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Game.Audio;
+using Game.Core;
 using Game.Interaction;
 using Game.Items;
 using UnityEngine;
@@ -127,6 +129,7 @@ namespace Game.Crafting
         {
             ShowSlider();
             SetSliderProgress(0f);
+            AudioService.Instance?.StartLoop(GameSoundId.Crafting);
         }
 
         public void ProcessHold(PlayerInteractor interactor, float progress)
@@ -137,6 +140,7 @@ namespace Game.Crafting
         public void CompleteHold(PlayerInteractor interactor)
         {
             HideSlider();
+            AudioService.Instance?.StopLoop(GameSoundId.Crafting);
 
             if (interactor == null || interactor.ItemHolder == null)
             {
@@ -169,6 +173,7 @@ namespace Game.Crafting
         public void CancelHold(PlayerInteractor interactor)
         {
             HideSlider();
+            AudioService.Instance?.StopLoop(GameSoundId.Crafting);
         }
 
         private void ShowSlider()
@@ -211,6 +216,7 @@ namespace Game.Crafting
 
             PickupItem slotItem = TakeSlotItem();
 
+            AudioService.Instance?.PlaySfx(GameSoundId.ItemDestroyed);
             Destroy(slotItem.gameObject);
 
             itemHolder.DestroyCurrentItem();
@@ -244,6 +250,7 @@ namespace Game.Crafting
             _slotItem.transform.SetParent(_slotPoint);
             _slotItem.transform.localPosition = Vector3.zero;
             _slotItem.transform.localRotation = Quaternion.identity;
+            AudioService.Instance?.PlaySfx(GameSoundId.ItemPlaced);
         }
 
         private PickupItem TakeSlotItem()

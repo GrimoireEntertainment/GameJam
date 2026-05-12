@@ -1,5 +1,6 @@
 using System;
 using Game.Core;
+using Game.Level;
 using UnityEngine;
 
 namespace Game.Gameplay
@@ -109,6 +110,13 @@ namespace Game.Gameplay
         {
             Time.timeScale = 1f;
             LockCursorForGameplay();
+
+            if (LevelSequenceController.Instance != null)
+            {
+                LevelSequenceController.Instance.ReloadCurrentScene();
+                return;
+            }
+
             SceneLoader.Instance.ReloadCurrentScene();
         }
 
@@ -116,6 +124,13 @@ namespace Game.Gameplay
         {
             Time.timeScale = 1f;
             UnlockCursorForUi();
+
+            if (LevelSequenceController.Instance != null)
+            {
+                LevelSequenceController.Instance.LoadMainMenu();
+                return;
+            }
+
             SceneLoader.Instance.LoadMainMenu();
         }
 
@@ -123,6 +138,13 @@ namespace Game.Gameplay
         {
             Time.timeScale = 1f;
             LockCursorForGameplay();
+
+            if (LevelSequenceController.Instance != null)
+            {
+                LevelSequenceController.Instance.LoadNextScene();
+                return;
+            }
+
             SceneLoader.Instance.LoadNextScene();
         }
 

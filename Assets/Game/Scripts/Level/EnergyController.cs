@@ -1,4 +1,6 @@
 using System;
+using Game.Audio;
+using Game.Core;
 using UnityEngine;
 
 namespace Game.Level
@@ -15,6 +17,11 @@ namespace Game.Level
         [SerializeField, Tooltip("Passive energy drain per second.")]
         private float _energyDrainPerSecond = 1f;
 
+        [SerializeField] private Light _globalLight;
+        [SerializeField] private float _lightIntensityWithEnoughEnergy;
+        [SerializeField] private float _lightIntensityWithEmptyEnergy;
+        [SerializeField] private Light[] _otherLights;
+
         private bool _wasEmpty;
 
         public float CurrentEnergy => _currentEnergy;
@@ -28,6 +35,9 @@ namespace Game.Level
         private void Awake()
         {
             _maxEnergy = Mathf.Max(0f, _maxEnergy);
+
+            _lightIntensityWithEnoughEnergy = _globalLight.intensity;
+
             SetEnergy(_currentEnergy);
         }
 
@@ -75,12 +85,30 @@ namespace Game.Level
             {
                 if (!_wasEmpty)
                 {
+                    // Set lights on levels with no energy to a dim state
+                    if (_globalLight != null) _globalLight.intensity = _lightIntensityWithEmptyEnergy;
+
+                    foreach (Light light in _otherLights) light.enabled = false;
+
+                    // AudioService.Instance?.PlayEnergyEmpty();
+                    
                     _wasEmpty = true;
+                    AudioService.Instance?.PlaySfx(GameSoundId.ShipPowerDown);
                     EnergyEmpty?.Invoke();
                 }
             }
             else
             {
+                if (_wasEmpty)
+                {
+                    // Set lights on levels with energy back to normal
+                    if (_globalLight != null)  _globalLight.intensity = _lightIntensityWithEnoughEnergy;
+
+                    foreach (Light light in _otherLights) light.enabled = true;
+
+                    // AudioService.Instance?.PlayEnergyEnough();
+                }
+
                 _wasEmpty = false;
             }
         }

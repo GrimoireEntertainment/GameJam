@@ -256,6 +256,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 93569995}
   m_CullTransparentMesh: 1
+--- !u!1 &132034803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 132034805}
+  - component: {fileID: 132034804}
+  m_Layer: 0
+  m_Name: LevelSequenceController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &132034804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132034803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20b94bd97bf9e274c9c3dbd9d0910e06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Level.LevelSequenceController
+  _sceneSequence:
+  - Level_1_Intro
+  - Level_1_Level_Art
+  - Level_2_Intro
+  - Level_2_Level_Art
+  - Level_3_Intro
+  - Level_3_Level_Art
+  - Level_4_Intro
+  - Level_4_Level_Art
+  _mainMenuSceneName: MainMenu
+--- !u!4 &132034805
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132034803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &174785992
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,6 +1548,9 @@ MonoBehaviour:
   _uiClickClip: {fileID: 8300000, guid: 9cb19eb032d304b07acec596ae2ce4a4, type: 3}
   _winClip: {fileID: 8300000, guid: 9d12098ed55364e7e80e277242e2c77e, type: 3}
   _loseClip: {fileID: 8300000, guid: 19de0a4b36bf0704aa0eb06d2261fdbb, type: 3}
+  _fireClip: {fileID: 0}
+  _gameAudioConfig: {fileID: 11400000, guid: 8313d2a6902fec140bd976a57fffd744, type: 2}
+  _playBackgroundMusicOnStart: 1
 --- !u!4 &1772745870
 Transform:
   m_ObjectHideFlags: 0
@@ -1523,3 +1580,4 @@ SceneRoots:
   - {fileID: 174785994}
   - {fileID: 483881928}
   - {fileID: 1538156547}
+  - {fileID: 132034805}

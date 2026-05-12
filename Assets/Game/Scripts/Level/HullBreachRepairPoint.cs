@@ -1,5 +1,7 @@
 using System;
 using Game.Accidents;
+using Game.Audio;
+using Game.Core;
 using Game.Interaction;
 using Game.Items;
 using UnityEngine;
@@ -42,12 +44,13 @@ namespace Game.Level
 
         private string _activeAccidentId;
 
-        private Renderer[] _renderers;
         private Collider[] _colliders;
 
         private bool _isActive;
         private bool _isRepairing;
         private bool _isRepaired;
+
+        private FireExtinguisherVfxController _activeFireExtinguisherVfx;
 
         public string AccidentTypeId => _accidentId;
         public string LocationId => _locationId;
@@ -67,8 +70,11 @@ namespace Game.Level
 
         private void Awake()
         {
-            _renderers = GetComponentsInChildren<Renderer>(true);
-            _colliders = GetComponentsInChildren<Collider>(true);
+            Transform root = _visualRoot != null
+                ? _visualRoot.transform
+                : transform;
+
+            _colliders = root.GetComponentsInChildren<Collider>(true);
         }
 
         private void OnEnable()
@@ -86,14 +92,6 @@ namespace Game.Level
             if (_hideOnStart && !_isActive)
             {
                 SetBreachVisible(false);
-            }
-        }
-
-        private void OnDisable()
-        {
-            if (_accidentController != null)
-            {
-                _accidentController.UnregisterRepairPoint(this);
             }
         }
 
@@ -143,6 +141,7 @@ namespace Game.Level
         public void DeactivateBreach()
         {
             _isActive = false;
+
             SetRepairing(false);
 
             _activeAccidentId = string.Empty;
@@ -189,6 +188,9 @@ namespace Game.Level
 
             SetRepairing(true);
 
+            StartRepairAudio();
+            StartRepairVfx(interactor);
+
             ResetRepairProgress();
         }
 
@@ -226,6 +228,7 @@ namespace Game.Level
             }
 
             SetRepairing(false);
+
             _isRepaired = true;
 
             _repairProgress = _repairDuration;
@@ -264,32 +267,76 @@ namespace Game.Level
             }
 
             _isRepairing = isRepairing;
+
+            if (!_isRepairing)
+            {
+                StopRepairAudio();
+                StopRepairVfx();
+            }
+
             RepairStateChanged?.Invoke(_isRepairing);
+        }
+
+        private void StartRepairAudio()
+        {
+            if (_requiredItem == ItemType.FireExtinguisher)
+            {
+                AudioService.Instance?.StartLoop(GameSoundId.FireExtinguisherSpray);
+            }
+        }
+
+        private void StopRepairAudio()
+        {
+            if (_requiredItem == ItemType.FireExtinguisher)
+            {
+                AudioService.Instance?.StopLoop(GameSoundId.FireExtinguisherSpray);
+            }
+        }
+
+        private void StartRepairVfx(PlayerInteractor interactor)
+        {
+            if (_requiredItem != ItemType.FireExtinguisher ||
+                interactor == null ||
+                interactor.ItemHolder == null)
+            {
+                return;
+            }
+
+            PickupItem currentItem = interactor.ItemHolder.CurrentItem;
+
+            if (currentItem == null)
+            {
+                return;
+            }
+
+            _activeFireExtinguisherVfx =
+                currentItem.GetComponentInChildren<FireExtinguisherVfxController>(true);
+
+            _activeFireExtinguisherVfx?.PlaySpray();
+        }
+
+        private void StopRepairVfx()
+        {
+            if (_activeFireExtinguisherVfx == null)
+            {
+                return;
+            }
+
+            _activeFireExtinguisherVfx.StopSpray();
+
+            _activeFireExtinguisherVfx = null;
         }
 
         private void SetBreachVisible(bool isVisible)
         {
-            if (_visualRoot != null && _visualRoot != gameObject)
+            if (_visualRoot != null)
             {
                 _visualRoot.SetActive(isVisible);
             }
 
-            SetRenderersEnabled(isVisible);
-
             if (_disableCollidersWhenInactive)
             {
                 SetCollidersEnabled(isVisible);
-            }
-        }
-
-        private void SetRenderersEnabled(bool isEnabled)
-        {
-            for (int i = 0; i < _renderers.Length; i++)
-            {
-                if (_renderers[i] != null)
-                {
-                    _renderers[i].enabled = isEnabled;
-                }
             }
         }
 

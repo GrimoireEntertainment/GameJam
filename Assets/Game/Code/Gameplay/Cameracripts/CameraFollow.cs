@@ -4,6 +4,10 @@ namespace Game.Code.Gameplay.Cameracripts
 {
     public sealed class CameraFollow : MonoBehaviour
     {
+        [Header("Mode")]
+        [SerializeField] private bool _isStatic = true;
+
+        [Header("Follow")]
         [SerializeField] private Transform _target;
         [SerializeField] private Vector3 _offset = new(0f, 5f, -7f);
         [SerializeField] private float _followSpeed = 10f;
@@ -13,6 +17,11 @@ namespace Game.Code.Gameplay.Cameracripts
 
         private void LateUpdate()
         {
+            if (_isStatic)
+            {
+                return;
+            }
+
             if (_target == null)
             {
                 return;

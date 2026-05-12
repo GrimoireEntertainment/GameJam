@@ -1,4 +1,5 @@
 using Game.Core;
+using Game.Level;
 using UnityEngine;
 
 namespace Game.UI
@@ -7,6 +8,12 @@ namespace Game.UI
     {
         public void Play()
         {
+            if (LevelSequenceController.Instance != null)
+            {
+                LevelSequenceController.Instance.StartSequence();
+                return;
+            }
+
             SceneLoader.Instance.LoadGameAsync();
         }
 

@@ -41,8 +41,11 @@ namespace Game.Core
 
         public void Load()
         {
-            MusicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, 1f);
-            SfxVolume = PlayerPrefs.GetFloat(SfxVolumeKey, 1f);
+            float defaultMusicVolume = AudioService.Instance != null ? AudioService.Instance.DefaultMusicVolume : 1f;
+            float defaultSfxVolume = AudioService.Instance != null ? AudioService.Instance.DefaultSfxVolume : 1f;
+
+            MusicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, defaultMusicVolume);
+            SfxVolume = PlayerPrefs.GetFloat(SfxVolumeKey, defaultSfxVolume);
 
             ApplySettings();
         }

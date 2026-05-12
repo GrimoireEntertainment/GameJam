@@ -33,6 +33,18 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7656988782650632892, guid: ed47066864b11b84899ff678dea1122f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7656988782650632892, guid: ed47066864b11b84899ff678dea1122f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7656988782650632892, guid: ed47066864b11b84899ff678dea1122f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7656988782650632892, guid: ed47066864b11b84899ff678dea1122f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -71,6 +83,10 @@ PrefabInstance:
     - target: {fileID: 7656988782650632892, guid: ed47066864b11b84899ff678dea1122f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7656988782650632892, guid: ed47066864b11b84899ff678dea1122f, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -140,8 +156,42 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1165969586359698, guid: baa7f7b1e2e5e4b48b9e969f76811bb7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5006373745345443520}
   m_SourcePrefab: {fileID: 100100000, guid: baa7f7b1e2e5e4b48b9e969f76811bb7, type: 3}
+--- !u!1 &8972251949102146207 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1165969586359698, guid: baa7f7b1e2e5e4b48b9e969f76811bb7, type: 3}
+  m_PrefabInstance: {fileID: 8973408982438358797}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5006373745345443520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8972251949102146207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845c415f3181b4840ab566c40e714752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isRotating: 1
+  rotateX: 0
+  rotateY: 1
+  rotateZ: 0
+  rotationSpeed: 85.67
+  isFloating: 1
+  useEasingForFloating: 1
+  floatHeight: 0
+  floatSpeed: 0
+  isScaling: 1
+  useEasingForScaling: 1
+  scaleLerpSpeed: 1.11
+  startScale: {x: 0.4, y: 0.4, z: 0.4}
+  endScale: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!4 &8977505112363413877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4911211638759032, guid: baa7f7b1e2e5e4b48b9e969f76811bb7, type: 3}

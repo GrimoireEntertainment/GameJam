@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Game.Audio;
+using Game.Core;
 using Game.Level;
 using UnityEngine;
 
@@ -15,17 +17,31 @@ namespace Game.Accidents
         [SerializeField, Tooltip("Accidents triggered by elapsed level time.")]
         private List<LevelAccidentScheduleEntry> _schedule = new();
 
+        [Header("Audio")]
+        [SerializeField, Tooltip("Accident Id that plays the fire loop.")]
+        private string _fireAccidentId = "Fire";
+
+        [SerializeField, Tooltip("Accident Id that plays the hull breach impact.")]
+        private string _hullBreachAccidentId = "HullBreach";
+
         private readonly Dictionary<string, ActiveAccident> _activeAccidents = new();
         private readonly List<IAccidentLocation> _accidentLocations = new();
         private readonly List<AccidentLinkedObject> _linkedObjects = new();
+        private readonly Dictionary<string, AudioSource> _alarmSourcesByAccidentId = new();
         private readonly HashSet<int> _triggeredScheduleEntries = new();
         private float _elapsedTime;
         private int _nextInstanceNumber;
+        private int _activeFireAccidentCount;
 
         public IReadOnlyCollection<ActiveAccident> ActiveAccidents => _activeAccidents.Values;
 
         public event Action<ActiveAccident> AccidentStarted;
         public event Action<ActiveAccident> AccidentResolved;
+
+        private void OnDisable()
+        {
+            StopAllAccidentAudio();
+        }
 
         private void Update()
         {
@@ -61,6 +77,7 @@ namespace Game.Accidents
             _shipHealthController?.AddDamageSource(instanceId, accident.DamagePerSecond);
             accidentLocation?.Activate(activeAccident);
             linkedObject?.Activate(activeAccident);
+            PlayAccidentStartedAudio(activeAccident);
             AccidentStarted?.Invoke(activeAccident);
             return activeAccident;
         }
@@ -86,6 +103,7 @@ namespace Game.Accidents
             _shipHealthController?.RemoveDamageSource(accident.InstanceId);
             FindAccidentLocation(accident)?.Deactivate(accident);
             FindLinkedObject(accident)?.Deactivate(accident);
+            PlayAccidentResolvedAudio(accident);
             AccidentResolved?.Invoke(accident);
         }
 
@@ -280,6 +298,76 @@ namespace Game.Accidents
             }
 
             return null;
+        }
+
+        private void PlayAccidentStartedAudio(ActiveAccident accident)
+        {
+            if (accident == null)
+            {
+                return;
+            }
+
+            if (accident.TypeId == _fireAccidentId)
+            {
+                if (_activeFireAccidentCount == 0)
+                {
+                    AudioService.Instance?.StartLoop(GameSoundId.FireBurning);
+                }
+
+                _activeFireAccidentCount++;
+            }
+
+            if (accident.TypeId == _hullBreachAccidentId)
+            {
+                AudioService.Instance?.PlaySfx(GameSoundId.HullBreachImpact);
+            }
+
+            AudioSource alarmSource = AudioService.Instance?.StartLoopInstance(GameSoundId.Alarm);
+
+            if (alarmSource != null)
+            {
+                _alarmSourcesByAccidentId[accident.InstanceId] = alarmSource;
+            }
+        }
+
+        private void PlayAccidentResolvedAudio(ActiveAccident accident)
+        {
+            if (accident == null)
+            {
+                return;
+            }
+
+            if (_alarmSourcesByAccidentId.TryGetValue(accident.InstanceId, out AudioSource alarmSource))
+            {
+                _alarmSourcesByAccidentId.Remove(accident.InstanceId);
+                AudioService.Instance?.StopLoopInstance(alarmSource);
+            }
+
+            if (accident.TypeId == _fireAccidentId)
+            {
+                _activeFireAccidentCount = Mathf.Max(0, _activeFireAccidentCount - 1);
+
+                if (_activeFireAccidentCount == 0)
+                {
+                    AudioService.Instance?.StopLoop(GameSoundId.FireBurning);
+                }
+            }
+        }
+
+        private void StopAllAccidentAudio()
+        {
+            foreach (AudioSource alarmSource in _alarmSourcesByAccidentId.Values)
+            {
+                AudioService.Instance?.StopLoopInstance(alarmSource);
+            }
+
+            _alarmSourcesByAccidentId.Clear();
+
+            if (_activeFireAccidentCount > 0)
+            {
+                _activeFireAccidentCount = 0;
+                AudioService.Instance?.StopLoop(GameSoundId.FireBurning);
+            }
         }
 
         private string CreateInstanceId(string accidentTypeId, string locationId)

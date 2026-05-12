@@ -15,7 +15,7 @@ namespace Game.Items
 
         [Header("Hold")]
         [SerializeField]
-        private float _holdDuration = 1.5f;
+        private float _holdDuration;
 
         [SerializeField]
         private Slider _holdProgressSlider;
@@ -24,7 +24,7 @@ namespace Game.Items
 
         private void Awake()
         {
-            HideSlider();
+            if (_holdProgressSlider != null) _holdProgressSlider.gameObject.SetActive(false);
         }
 
         public void SetInteractActive(bool isActive)
@@ -82,7 +82,7 @@ namespace Game.Items
 
         private void ShowSlider()
         {
-            if (_holdProgressSlider == null)
+            if (_holdDuration == 0f || _holdProgressSlider == null)
             {
                 return;
             }
@@ -92,7 +92,7 @@ namespace Game.Items
 
         private void HideSlider()
         {
-            if (_holdProgressSlider == null)
+            if (_holdDuration == 0f || _holdProgressSlider == null)
             {
                 return;
             }
@@ -103,7 +103,7 @@ namespace Game.Items
 
         private void SetSliderProgress(float progress)
         {
-            if (_holdProgressSlider == null)
+            if (_holdDuration == 0f || _holdProgressSlider == null)
             {
                 return;
             }

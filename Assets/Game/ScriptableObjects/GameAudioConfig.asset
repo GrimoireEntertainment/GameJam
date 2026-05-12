@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13581e20874ba3041b5b326a888c13af, type: 3}
+  m_Name: GameAudioConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Audio.GameAudioConfig
+  _sounds:
+  - SoundId: 1
+    Clip: {fileID: 8300000, guid: 1b7c8c38b2ca8224e800f5d55457b430, type: 3}
+    Volume: 0.5
+  - SoundId: 2
+    Clip: {fileID: 8300000, guid: b04dba789259bd64b8ea8fa07e95c3bc, type: 3}
+    Volume: 0.5
+  - SoundId: 3
+    Clip: {fileID: 8300000, guid: fdeae9da77f1afe48a765c35667d4465, type: 3}
+    Volume: 1
+  - SoundId: 4
+    Clip: {fileID: 8300000, guid: aef7eaf548d09394eaea9f98db0eb3f6, type: 3}
+    Volume: 1
+  - SoundId: 5
+    Clip: {fileID: 8300000, guid: d785d6ca44f91024aa27b711a40ef18f, type: 3}
+    Volume: 0.5
+  - SoundId: 6
+    Clip: {fileID: 8300000, guid: a314385c6dbe3614b906e565eeda7d29, type: 3}
+    Volume: 0.5
+  - SoundId: 7
+    Clip: {fileID: 8300000, guid: 27173a338e58b4643bb452eef8778587, type: 3}
+    Volume: 0.5
+  - SoundId: 8
+    Clip: {fileID: 8300000, guid: 01b3dbda3f149fd498ef3287d88b9bbb, type: 3}
+    Volume: 0.5
+  - SoundId: 9
+    Clip: {fileID: 8300000, guid: eed042b5b8a08f142a23f8bd5a7edb4c, type: 3}
+    Volume: 0.1
+  - SoundId: 10
+    Clip: {fileID: 8300000, guid: 67e07ccab54ed324888816642a0ec3d2, type: 3}
+    Volume: 0.5
+  - SoundId: 11
+    Clip: {fileID: 8300000, guid: 1ec88e5996896f84b944bef363610de7, type: 3}
+    Volume: 0.1
+  - SoundId: 12
+    Clip: {fileID: 8300000, guid: 8aebe013dc1993244bd8f0600a25d076, type: 3}
+    Volume: 0.5
+  - SoundId: 13
+    Clip: {fileID: 8300000, guid: 0b807d6d3465d6f4ebf43e0817ff8c5e, type: 3}
+    Volume: 0.1

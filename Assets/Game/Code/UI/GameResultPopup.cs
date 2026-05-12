@@ -9,6 +9,8 @@ namespace Game.UI
         [SerializeField] private GameObject _root;
         [SerializeField] private TMP_Text _titleText;
         [SerializeField] private TMP_Text _descriptionText;
+        [SerializeField] private GameObject _winBackgroundRoot;
+        [SerializeField] private GameObject _loseBackgroundRoot;
         [SerializeField] private GameObject _restartButtonRoot;
         [SerializeField] private GameObject _nextLevelButtonRoot;
         [SerializeField] private GameObject _mainMenuButtonRoot;
@@ -16,12 +18,14 @@ namespace Game.UI
         public void ShowWin()
         {
             Show("Victory", "You completed the game.");
+            SetBackground(isWin: true);
             SetButtons(isWin: true);
         }
 
         public void ShowLose()
         {
             Show("Defeat", "Try again.");
+            SetBackground(isWin: false);
             SetButtons(isWin: false);
         }
 
@@ -31,6 +35,8 @@ namespace Game.UI
             {
                 _root.SetActive(false);
             }
+
+            SetBackground(isWin: null);
         }
 
         public void OnRestartClicked()
@@ -81,6 +87,19 @@ namespace Game.UI
             if (_mainMenuButtonRoot != null)
             {
                 _mainMenuButtonRoot.SetActive(!isWin);
+            }
+        }
+
+        private void SetBackground(bool? isWin)
+        {
+            if (_winBackgroundRoot != null)
+            {
+                _winBackgroundRoot.SetActive(isWin == true);
+            }
+
+            if (_loseBackgroundRoot != null)
+            {
+                _loseBackgroundRoot.SetActive(isWin == false);
             }
         }
     }

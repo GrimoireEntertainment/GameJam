@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Game.Code.Core;
 using Game.Items;
@@ -15,6 +16,7 @@ namespace Game.Interaction
         private Transform _interactionPoint;
 
         private readonly List<IInteractable> _nearbyInteractables = new();
+        private readonly Dictionary<IInteractable, int> _nearbyInteractableCounts = new();
 
         private IInteractable _currentInteractable;
 
@@ -22,6 +24,8 @@ namespace Game.Interaction
         private float _holdTimer;
 
         public PlayerItemHolder ItemHolder => _itemHolder;
+
+        public event Action<IInteractable> Interacted;
 
         public void Construct()
         {
@@ -56,7 +60,9 @@ namespace Game.Interaction
             }
 
             // Instant interaction
+            IInteractable interacted = _currentInteractable;
             _currentInteractable.Interact(this);
+            Interacted?.Invoke(interacted);
 
             RefreshCurrentInteractable();
         }
@@ -68,12 +74,20 @@ namespace Game.Interaction
 
         public void RegisterInteractable(IInteractable interactable)
         {
-            if (interactable == null || _nearbyInteractables.Contains(interactable))
+            if (interactable == null)
             {
                 return;
             }
 
-            _nearbyInteractables.Add(interactable);
+            if (_nearbyInteractableCounts.TryGetValue(interactable, out int count))
+            {
+                _nearbyInteractableCounts[interactable] = count + 1;
+            }
+            else
+            {
+                _nearbyInteractableCounts.Add(interactable, 1);
+                _nearbyInteractables.Add(interactable);
+            }
 
             RefreshCurrentInteractable();
         }
@@ -85,6 +99,14 @@ namespace Game.Interaction
                 return;
             }
 
+            if (_nearbyInteractableCounts.TryGetValue(interactable, out int count) && count > 1)
+            {
+                _nearbyInteractableCounts[interactable] = count - 1;
+                RefreshCurrentInteractable();
+                return;
+            }
+
+            _nearbyInteractableCounts.Remove(interactable);
             _nearbyInteractables.Remove(interactable);
 
             if (_currentInteractable == interactable)
@@ -124,7 +146,9 @@ namespace Game.Interaction
 
             _isHoldingInteract = false;
 
+            IInteractable interacted = _currentInteractable;
             holdInteractable.CompleteHold(this);
+            Interacted?.Invoke(interacted);
 
             RefreshCurrentInteractable();
         }
@@ -168,6 +192,7 @@ namespace Game.Interaction
                 if (interactable is not Component component || component == null)
                 {
                     _nearbyInteractables.RemoveAt(i);
+                    _nearbyInteractableCounts.Remove(interactable);
                     continue;
                 }
 

@@ -1,4 +1,6 @@
 using System;
+using Game.Audio;
+using Game.Core;
 using Game.Interaction;
 using Game.Items;
 using UnityEngine;
@@ -14,8 +16,12 @@ namespace Game.Level
         [SerializeField, Tooltip("Item required in player hand to recharge energy.")]
         private ItemType _requiredItem = ItemType.Battery;
 
+        [Header("Slots")]
         [SerializeField, Tooltip("How many batteries fit in this station.")]
         private int _maxBatterySlots = 4;
+
+        [SerializeField, Tooltip("Energy added by one battery. If 0 or less, uses MaxEnergy / MaxBatterySlots.")]
+        private float _energyPerBattery;
 
         [SerializeField, Tooltip("Whether the required item is consumed on recharge.")]
         private bool _consumeItem = true;
@@ -24,6 +30,7 @@ namespace Game.Level
         public int OccupiedBatterySlots => GetOccupiedBatterySlots();
         public int FreeBatterySlots => MaxBatterySlots - OccupiedBatterySlots;
         public bool HasFreeSlot => FreeBatterySlots > 0;
+        public float EnergyPerBattery => GetEnergyPerBattery();
 
         public event Action<int, int> BatterySlotsChanged;
 
@@ -36,11 +43,19 @@ namespace Game.Level
                 _energyController.EnergyChanged += OnEnergyChanged;
             }
 
+            UpdateWorkingSound();
             NotifySlotsChangedIfNeeded(force: true);
+        }
+
+        private void OnValidate()
+        {
+            _maxBatterySlots = Mathf.Max(1, _maxBatterySlots);
+            _energyPerBattery = Mathf.Max(0f, _energyPerBattery);
         }
 
         private void Start()
         {
+            UpdateWorkingSound();
             NotifySlotsChangedIfNeeded(force: true);
         }
 
@@ -50,6 +65,8 @@ namespace Game.Level
             {
                 _energyController.EnergyChanged -= OnEnergyChanged;
             }
+
+            AudioService.Instance?.StopLoop(GameSoundId.EnergyStationWorking);
         }
 
         public void SetInteractActive(bool isActive)
@@ -88,13 +105,31 @@ namespace Game.Level
                 return;
             }
 
+            AudioService.Instance?.PlaySfx(GameSoundId.ItemPlaced);
             _energyController.AddEnergy(GetEnergyPerBattery());
+            NotifySlotsChangedIfNeeded(force: true);
+        }
+
+        public void RefreshBatterySlots()
+        {
             NotifySlotsChangedIfNeeded(force: true);
         }
 
         private void OnEnergyChanged(float currentEnergy, float maxEnergy)
         {
+            UpdateWorkingSound();
             NotifySlotsChangedIfNeeded(force: false);
+        }
+
+        private void UpdateWorkingSound()
+        {
+            if (_energyController != null && _energyController.HasEnergy)
+            {
+                AudioService.Instance?.StartLoop(GameSoundId.EnergyStationWorking);
+                return;
+            }
+
+            AudioService.Instance?.StopLoop(GameSoundId.EnergyStationWorking);
         }
 
         private int GetOccupiedBatterySlots()
@@ -119,6 +154,11 @@ namespace Game.Level
             if (_energyController == null)
             {
                 return 0f;
+            }
+
+            if (_energyPerBattery > 0f)
+            {
+                return _energyPerBattery;
             }
 
             return _energyController.MaxEnergy / MaxBatterySlots;

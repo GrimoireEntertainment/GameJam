@@ -16,4 +16,4 @@ MonoBehaviour:
   DisplayName: Fire
   Description: There is a FIRE in the ship.
   Icon: {fileID: 21300000, guid: b9ed1157e47350849a4469c0372cee94, type: 3}
-  DamagePerSecond: 5
+  DamagePerSecond: 2

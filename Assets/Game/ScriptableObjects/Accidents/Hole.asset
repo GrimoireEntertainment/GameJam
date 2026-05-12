@@ -16,4 +16,4 @@ MonoBehaviour:
   DisplayName: Hole
   Description: There is a HOLE in the ship.
   Icon: {fileID: 21300000, guid: 9e34d3eabdf58bc498232bc6a12cf1ce, type: 3}
-  DamagePerSecond: 5
+  DamagePerSecond: 2
